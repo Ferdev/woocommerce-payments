@@ -95,6 +95,12 @@ export function* getDepositsOverview() {
 	}
 }
 
+/*eslint-disable camelcase*/
+const formatQueryFilters = ( query ) => ( {
+	currency_is: query.currencyIs,
+} );
+/*eslint-enable camelcase*/
+
 /**
  * Retrieves a series of deposits from the deposits list API.
  *
@@ -104,6 +110,7 @@ export function* getDeposits( query ) {
 	const path = addQueryArgs( `${ NAMESPACE }/deposits`, {
 		page: query.paged,
 		pagesize: query.perPage,
+		...formatQueryFilters( query ),
 	} );
 
 	try {

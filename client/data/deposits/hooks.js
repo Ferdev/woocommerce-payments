@@ -35,7 +35,11 @@ export const useDepositsOverview = () =>
 	} );
 
 // eslint-disable-next-line camelcase
-export const useDeposits = ( { paged, per_page: perPage } ) =>
+export const useDeposits = ( {
+	paged,
+	per_page: perPage,
+	currency_is: currencyIs,
+} ) =>
 	useSelect(
 		( select ) => {
 			const { getDeposits, getDepositQueryError, isResolving } = select(
@@ -47,6 +51,7 @@ export const useDeposits = ( { paged, per_page: perPage } ) =>
 				perPage: Number.isNaN( parseInt( perPage, 10 ) )
 					? '25'
 					: perPage,
+				currencyIs,
 			};
 			return {
 				deposits: getDeposits( query ),
@@ -54,5 +59,5 @@ export const useDeposits = ( { paged, per_page: perPage } ) =>
 				isLoading: isResolving( 'getDeposits', [ query ] ),
 			};
 		},
-		[ paged, perPage ]
+		[ paged, perPage, currencyIs ]
 	);

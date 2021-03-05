@@ -299,17 +299,21 @@ class WC_Payments_API_Client {
 	/**
 	 * List deposits
 	 *
-	 * @param int $page      The requested page.
-	 * @param int $page_size The size of the requested page.
+	 * @param int   $page       The requested page.
+	 * @param int   $page_size  The size of the requested page.
+	 * @param array $filters The filters to be used in the query.
 	 *
 	 * @return array
 	 * @throws API_Exception - Exception thrown on request failure.
 	 */
-	public function list_deposits( $page = 0, $page_size = 25 ) {
-		$query = [
-			'page'     => $page,
-			'pagesize' => $page_size,
-		];
+	public function list_deposits( $page = 0, $page_size = 25, array $filters = [] ) {
+		$query = array_merge(
+			$filters,
+			[
+				'page'     => $page,
+				'pagesize' => $page_size,
+			]
+		);
 
 		return $this->request( $query, self::DEPOSITS_API, self::GET );
 	}

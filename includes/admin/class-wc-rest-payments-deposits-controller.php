@@ -32,7 +32,15 @@ class WC_REST_Payments_Deposits_Controller extends WC_Payments_REST_Controller {
 				'permission_callback' => [ $this, 'check_permission' ],
 			]
 		);
-
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/summary',
+			[
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_deposits_summary' ],
+				'permission_callback' => [ $this, 'check_permission' ],
+			]
+		);
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/overview',
@@ -42,7 +50,6 @@ class WC_REST_Payments_Deposits_Controller extends WC_Payments_REST_Controller {
 				'permission_callback' => [ $this, 'check_permission' ],
 			]
 		);
-
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<deposit_id>\w+)',
@@ -60,9 +67,19 @@ class WC_REST_Payments_Deposits_Controller extends WC_Payments_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 */
 	public function get_deposits( $request ) {
-		$page      = (int) $request->get_param('page');
-		$page_size = (int) $request->get_param('pagesize');
-		return $this->forward_request( 'list_deposits', [ $page, $page_size, $this->get_transactions_filters( $request ) ] );
+		$page      = (int) $request->get_param( 'page' );
+		$page_size = (int) $request->get_param( 'pagesize' );
+		return $this->forward_request( 'list_deposits', [ $page, $page_size, $this->get_deposits_filters( $request ) ] );
+	}
+
+	/**
+	 * Retrieve deposits summary to respond with via API.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 */
+	public function get_deposits_summary( $request ) {
+		$filters = $this->get_deposits_filters( $request );
+		return $this->forward_request( 'get_deposits_summary', [ $filters ] );
 	}
 
 	/**
@@ -87,7 +104,7 @@ class WC_REST_Payments_Deposits_Controller extends WC_Payments_REST_Controller {
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
 	 */
-	private function get_transactions_filters( $request ) {
+	private function get_deposits_filters( $request ) {
 		return array_filter(
 			[
 				'match'       => $request->get_param( 'match' ),

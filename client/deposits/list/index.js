@@ -12,7 +12,7 @@ import { onQueryChange, getQuery } from '@woocommerce/navigation';
 /**
  * Internal dependencies.
  */
-import { useDeposits } from 'data';
+import { useDeposits, useDepositsSummary } from 'data';
 import { displayType, displayStatus } from '../strings';
 import { formatStringValue } from 'util';
 import { formatCurrency } from 'utils/currency';
@@ -52,6 +52,9 @@ const columns = [
 
 export const DepositsList = () => {
 	const { deposits, isLoading } = useDeposits( getQuery() );
+	const { depositsSummary, isLoading: isSummaryLoading } = useDepositsSummary(
+		getQuery()
+	);
 
 	const rows = deposits.map( ( deposit ) => {
 		const clickable = ( children ) => (
@@ -103,17 +106,31 @@ export const DepositsList = () => {
 		return columns.map( ( { key } ) => data[ key ] || { display: null } );
 	} );
 
+	const summary = [
+		{ label: 'deposits', value: `${ depositsSummary.count }` },
+		{
+			label: 'total',
+			value: `${ formatCurrency(
+				depositsSummary.total,
+				depositsSummary.currency
+			) }`,
+		},
+	];
+
+	// Summary will be rendered if it's available and deposit currency filter has been applied.
+	const showSummary =
+		! isSummaryLoading && 'string' === typeof getQuery().currency_is;
+
 	return (
 		<TableCard
-			// className="deposits-list"
+			className="deposits-list woocommerce-report-table"
 			title={ __( 'Deposit history', 'woocommerce-payments' ) }
 			isLoading={ isLoading }
-			// rowsPerPage={ getQuery().per_page || 25 }
-			// totalRows={ count || 0 }
-			rowsPerPage={ 10 }
-			totalRows={ 10 }
+			rowsPerPage={ getQuery().per_page || 25 }
+			totalRows={ depositsSummary.count || 0 }
 			headers={ columns }
 			rows={ rows }
+			summary={ showSummary ? summary : null }
 			query={ getQuery() }
 			onQueryChange={ onQueryChange }
 		/>

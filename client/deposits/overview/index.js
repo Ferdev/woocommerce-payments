@@ -196,7 +196,7 @@ const DepositsOverview = () => {
 								) }
 								value={ getAmount(
 									overview.last_deposit,
-									wcpaySettings.currencies.default
+									overview.account.default_currency
 								) }
 								prevLabel={ getDepositDate(
 									overview.last_deposit
@@ -218,7 +218,7 @@ const DepositsOverview = () => {
 								) }
 								value={ getAmount(
 									overview.next_deposit,
-									wcpaySettings.currencies.default
+									overview.account.default_currency
 								) }
 								prevLabel={ getNextDepositLabelFormatted(
 									overview.next_deposit
@@ -240,7 +240,7 @@ const DepositsOverview = () => {
 								) }
 								value={ getAmount(
 									overview.balance.pending,
-									wcpaySettings.currencies.default
+									overview.account.default_currency
 								) }
 								prevLabel={ getBalanceDepositCount(
 									overview.balance.pending
@@ -254,7 +254,7 @@ const DepositsOverview = () => {
 								) }
 								value={ getAmount(
 									overview.balance.available,
-									wcpaySettings.currencies.default
+									overview.account.default_currency
 								) }
 								prevLabel=""
 							/>,

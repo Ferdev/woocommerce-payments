@@ -307,9 +307,8 @@ export const TransactionsList = ( props ) => {
 			value: `${ transactionsSummary.count }`,
 		},
 	];
+	const isCurrencyFiltered = 'string' === typeof getQuery().store_currency_is;
 	if ( ! isSummaryLoading ) {
-		const isCurrencyFiltered =
-			'string' === typeof getQuery().store_currency_is;
 		const isSingleCurrency =
 			1 === ( transactionsSummary.store_currencies || [] ).length;
 		if ( isSingleCurrency || isCurrencyFiltered ) {
@@ -340,7 +339,9 @@ export const TransactionsList = ( props ) => {
 	}
 
 	const showFilters = ! props.depositId;
-	const storeCurrencies = transactionsSummary.store_currencies || [];
+	const storeCurrencies =
+		transactionsSummary.store_currencies ||
+		( isCurrencyFiltered ? [ getQuery().store_currency_is ] : [] );
 
 	return (
 		<Page>

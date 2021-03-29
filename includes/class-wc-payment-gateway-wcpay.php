@@ -102,7 +102,7 @@ class WC_Payment_Gateway_WCPay extends WC_Payment_Gateway_CC {
 		$this->has_fields         = true;
 		$this->method_title       = __( 'WooCommerce Payments', 'woocommerce-payments' );
 		$this->method_description = __( 'Accept payments via credit card.', 'woocommerce-payments' );
-		$this->title              = __( 'Credit card', 'woocommerce-payments' );
+		$this->title              = $this->payment_methods_icons();
 		$this->description        = __( 'Enter your card details', 'woocommerce-payments' );
 		$this->supports           = [
 			'products',
@@ -1910,4 +1910,28 @@ class WC_Payment_Gateway_WCPay extends WC_Payment_Gateway_CC {
 	public function enable() {
 		$this->update_option( 'enabled', 'yes' );
 	}
+
+
+	/**
+	 * Returns a HTML list of payment methods icons
+     *
+     * @return string HTML list of payment methods icons
+	 */
+    private function payment_methods_icons() {
+        ob_start();
+		?>
+			<span><?php echo __( 'Recommended', 'woocommerce-payments' ) ?></span>
+        <div>
+            <span><img width="30" src="https://logos-marcas.com/wp-content/uploads/2020/09/Mastercard-Logo.png" /></span>
+            <span><img width="30" src="https://logos-marcas.com/wp-content/uploads/2020/04/Visa-Logo.png" /></span>
+            <span><img width="30" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/American_Express_logo_%282018%29.svg/1200px-American_Express_logo_%282018%29.svg.png" /></span>
+            <span><img width="30" src="http://allvectorlogo.com/img/2016/11/apple-pay-logo.png" /></span>
+            <span><img width="30" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Giropay.svg/1280px-Giropay.svg.png" /></span>
+            <span><img width="30" src="https://user-images.githubusercontent.com/52973457/82835977-d9520b00-9ec5-11ea-8880-642813c05f24.png" /></span>
+            <span><img width="30" src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Single_Euro_Payments_Area_logo.svg" /></span>
+        </div>
+		<?php
+
+		return ob_get_clean();
+    }
 }

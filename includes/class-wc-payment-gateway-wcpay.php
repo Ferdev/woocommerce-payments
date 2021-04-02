@@ -102,7 +102,7 @@ class WC_Payment_Gateway_WCPay extends WC_Payment_Gateway_CC {
 		$this->has_fields         = true;
 		$this->method_title       = __( 'WooCommerce Payments', 'woocommerce-payments' );
 		$this->method_description = __( 'Accept payments via credit card.', 'woocommerce-payments' );
-		$this->title              = $this->payment_methods_icons();
+		$this->title              = $this->payment_method_title();
 		$this->description        = __( 'Enter your card details', 'woocommerce-payments' );
 		$this->supports           = [
 			'products',
@@ -1911,6 +1911,27 @@ class WC_Payment_Gateway_WCPay extends WC_Payment_Gateway_CC {
 		$this->update_option( 'enabled', 'yes' );
 	}
 
+
+	/**
+	 * Returns this payment method title
+     *
+     * @return string Title of the payment method
+	 */
+    private function payment_method_title() {
+        $page = $_GET[ 'page' ];
+        $tab = $_GET[ 'tab' ];
+        $checkout_page_open =
+                            ! empty( $page ) &&
+                            ! empty( $tab ) &&
+                            ! empty( $_GET['section'] ) &&
+                            $page === 'wc-settings' && $tab === 'checkout';
+
+        if ( ( empty( $page ) && empty( $tab ) ) || $checkout_page_open ) {
+            return __( 'WooCommerce Payments', 'woocommerce-payments');
+        } else {
+            return $this->payment_methods_icons();
+        }
+    }
 
 	/**
 	 * Returns a HTML list of payment methods icons
